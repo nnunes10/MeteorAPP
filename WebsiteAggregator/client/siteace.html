@@ -1,0 +1,140 @@
+<head>
+  <title>siteace</title>
+</head>
+
+<body>
+
+</body>
+
+<template name="ApplicationLayout">
+	{{> yield "navbar"}}
+	{{> yield "main"}}
+</template>	
+
+<template name="navbar">
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="/">
+	        Site Ace
+	      </a>
+	      {{> loginButtons}}
+	    </div>
+	  </div>
+	</nav>
+</template>
+
+
+<template name="website_form">
+	{{#if currentUser}}
+	<div class="container">
+		<h3> Add Website </h3>
+		<a class="btn btn-default js-toggle-website-form" href="#">
+	  		<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</a>
+		<div id="website_form" class="hidden_div">
+			<form class="js-save-website-form">
+			  <div class="form-group">
+			    <label for="url">Site address</label>
+			    <input type="text" class="form-control" id="url" placeholder="http://www.mysite.com">
+			  </div>
+			  <div class="form-group">
+			    <label for="title">Title</label>
+			    <input type="text" class="form-control" id="title" placeholder="Mysite">
+			  </div>
+			    <div class="form-group">
+			    <label for="description">Description</label>
+			    <input type="text" class="form-control" id="description" placeholder="I found this site really useful for ...">
+			  </div>
+
+			  <button type="submit" class="btn btn-default">Submit</button>
+			</form>
+		</div>
+	</div>
+	{{/if}}
+
+	<div class="container">
+		<h3> Website List </h3>
+		<form class="js-search-pattern">
+		    <div class="input-group">
+		      <input type="text" class="form-control" id='search_pattern' placeholder="Search for...">
+		      <span class="input-group-btn">
+		        <button class="btn btn-default" type="submit">Search</button>
+		      </span>
+		    </div>
+	    </form>
+	</div>
+	{{> website_list}}
+</template>
+
+<!-- template that displays several website items -->
+<template name="website_list">
+	<div class="container">
+		<ol>
+		{{#each websites}}
+		{{>website_item}}
+		{{/each}}
+		</ol>
+	</div>
+</template>
+
+<!-- template that displays individual website entries -->
+<template name="website_item">
+<li class="ui-state-default">
+	<a href="{{url}}">{{getTitle _id}}</a>
+	<p>
+	{{description}}
+	</p>
+	<p>
+	UpVotes: {{nUpVotes}}
+	</p>
+	<p>
+	DownVotes: {{nDownVotes}}
+	</p>
+	<p>
+	CreatedOn: {{createdOn}}
+	</p>
+	<!-- you will be putting your up and down vote buttons in here! -->
+	<a href="#" class="btn btn-success js-add-upvote">
+		<span class="glyphicon glyphicon-plus"></span>
+	</a>
+	<a href="#" class="btn btn-danger js-add-downvote">
+		<span class="glyphicon glyphicon-minus"></span>
+	</a>
+	<a href="/detail/{{_id}}" class="btn btn-default">
+		<span class="glyphicon glyphicon-search"></span>
+	</a>
+</li>
+</template>
+
+<template name="single_website">
+	<div class="container">
+		<h3> Website </h3>
+		<a href="{{url}}">{{url}}</a>
+		<p>{{description}}</p>
+
+		<form class="js-add-comment">
+			<input type="text" id="userComment" class="form-control" placeholder="Write your comment here..." />
+		    <span class="input-group-btn">     
+	            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-comment"></span> Add Comment</button>
+	        </span>
+    	</form>
+
+		{{> website_comments website_id=_id}}
+	</div>
+</template>
+
+<template name="website_comments">
+		<hr data-brackets-id="12673">
+		<h4> Comments </h4>
+		<hr data-brackets-id="12673">
+   		<ul data-brackets-id="12674" id="sortable" class="list-unstyled ui-sortable">
+			{{#each comments}}
+
+	        <strong class="pull-left primary-font">{{user}}: </strong>
+
+	        <li class="ui-state-default">{{comment}}</li>
+	        <hr data-brackets-id="12673">
+			{{/each}}
+		</ul>
+</template>
